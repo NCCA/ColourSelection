@@ -2,7 +2,7 @@
 #define SELECT_OBJECT_H__
 
 #include <ngl/Camera.h>
-#include <ngl/TransformStack.h>
+#include <ngl/Transformation.h>
 #include <ngl/Vec3.h>
 
 //----------------------------------------------------------------------------------------------------------------------
