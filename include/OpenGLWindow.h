@@ -44,6 +44,7 @@ class OpenGLWindow : public QWindow
     //----------------------------------------------------------------------------------------------------------------------
     virtual void initialize()=0;
 
+
   public slots:
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief Qt slot to allow use to queue up a render for the next avaliable event process

@@ -266,9 +266,6 @@ void NGLScene::doSelection(const int _x, const int _y)
    m_mouseGlobalTX.m_m[3][1] = m_modelPos.m_y;
    m_mouseGlobalTX.m_m[3][2] = m_modelPos.m_z;
 
-  // Rotation based on the mouse position for our global
-  // transform
-
   BOOST_FOREACH(SelectObject &s, m_objectArray)
   {
     s.draw(true,"nglColourShader",m_mouseGlobalTX,m_cam);
@@ -280,7 +277,7 @@ void NGLScene::doSelection(const int _x, const int _y)
   GLint viewport[4];
   glGetIntegerv(GL_VIEWPORT, viewport);
   // read the pixels (1,1 at present but could do wider area)
-  glReadPixels(_x*devicePixelRatio(), viewport[3] - _y*devicePixelRatio(), 4, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
+  glReadPixels(_x*devicePixelRatio(), viewport[3] - _y*devicePixelRatio(), 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
   // now loop for each object and see if the colour matches
   // need to use a reference object as we will change the class Active value
   int num=0;

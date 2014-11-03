@@ -37,12 +37,14 @@ SelectObject::SelectObject(ngl::Vec3 pos)
 
 bool SelectObject::checkSelectionColour(const unsigned char col[3])
 {
+
   // see if the colour passed in is the same as our objects one
   if(m_colourID[0] == col[0] && m_colourID[1] == col[1] && m_colourID[2] == col[2])
   {
    m_active^=true;
    return true;
   }
+  return false;
 }
 
 
