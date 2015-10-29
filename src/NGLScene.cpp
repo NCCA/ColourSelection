@@ -9,8 +9,7 @@
 #include <ngl/VAOPrimitives.h>
 #include <ngl/ShaderLib.h>
 #include <ngl/Random.h>
-#include <boost/foreach.hpp>
-
+#include <array>
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -47,13 +46,13 @@ NGLScene::~NGLScene()
   std::cout<<"Shutting down NGL, removing VAO's and Shaders\n";
 }
 
-void NGLScene::resizeGL(int _w, int _h)
+void NGLScene::resizeGL(QResizeEvent *_event)
 {
-  // set the viewport for openGL
-  glViewport(0, 0,_w* devicePixelRatio(), _h * devicePixelRatio());
+  m_width=_event->size().width()*devicePixelRatio();
+  m_height=_event->size().height()*devicePixelRatio();
+
   // now set the camera size values as the screen size has changed
-  m_cam->setShape(45,(float)_w/_h,0.05,350);
-  update();
+  m_cam.setShape(45.0f,(float)width()/height(),0.05f,350.0f);
 }
 
 
@@ -64,6 +63,7 @@ void NGLScene::initializeGL()
   ngl::NGLInit::instance();
 
   glClearColor(0.4f, 0.4f, 0.4f, 1.0f);			   // Grey Background
+  glViewport(0,0,m_width,m_height);
   // enable depth testing for drawing
   glEnable(GL_DEPTH_TEST);
   // enable multisampling for smoother drawing
@@ -71,21 +71,21 @@ void NGLScene::initializeGL()
   // Now we will create a basic Camera from the graphics library
   // This is a static camera so it only needs to be set once
   // First create Values for the camera position
-  ngl::Vec3 from(0,15,25);
-  ngl::Vec3 to(0,0,0);
-  ngl::Vec3 up(0,1,0);
-  m_cam= new ngl::Camera(from,to,up);
+  ngl::Vec3 from(0.0f,15.0f,25.0f);
+  ngl::Vec3 to(0.0f,0.0f,0.0f);
+  ngl::Vec3 up(0.0f,1.0f,0.0f);
+  m_cam.set(from,to,up);
   // set the shape using FOV 45 Aspect Ratio based on Width and Height
   // The final two are near and far clipping planes of 0.5 and 10
-  m_cam->setShape(45,(float)720.0/576.0,0.5,150);
+  m_cam.setShape(45.0f,(float)720.0f/576.0f,0.5f,150.0f);
   ngl::ShaderLib *shader=ngl::ShaderLib::instance();
   (*shader)["nglDiffuseShader"]->use();
-  shader->setShaderParam4f("Colour",1,1,1,1);
+  shader->setShaderParam4f("Colour",1.0f,1.0f,1.0f,1.0f);
 
   (*shader)["nglDiffuseShader"]->use();
-  shader->setShaderParam4f("Colour",1,1,0,1);
-  shader->setShaderParam3f("lightPos",1,1,1);
-  shader->setShaderParam4f("lightDiffuse",1,1,1,1);
+  shader->setShaderParam4f("Colour",1.0f,1.0f,0.0f,1.0f);
+  shader->setShaderParam3f("lightPos",1.0f,1.0f,1.0f);
+  shader->setShaderParam4f("lightDiffuse",1.0f,1.0f,1.0f,1.0f);
 
 
   // as re-size is not explicitly called we need to do this.
@@ -116,17 +116,17 @@ void NGLScene::paintGL()
   if (m_displayMode==true)
   {
 
-    BOOST_FOREACH(SelectObject s, m_objectArray)
+    for(SelectObject s : m_objectArray)
     {
-      s.draw(false,"nglDiffuseShader",m_mouseGlobalTX,m_cam);
+      s.draw(false,"nglDiffuseShader",m_mouseGlobalTX,&m_cam);
     }
   }
   else
   {
 
-    BOOST_FOREACH(SelectObject s, m_objectArray)
+    for(SelectObject s : m_objectArray)
     {
-      s.draw(true,"nglColourShader",m_mouseGlobalTX,m_cam);
+      s.draw(true,"nglColourShader",m_mouseGlobalTX,&m_cam);
     }
   }
 
@@ -259,24 +259,24 @@ void NGLScene::doSelection(const int _x, const int _y)
    m_mouseGlobalTX.m_m[3][1] = m_modelPos.m_y;
    m_mouseGlobalTX.m_m[3][2] = m_modelPos.m_z;
 
-  BOOST_FOREACH(SelectObject &s, m_objectArray)
+  for(SelectObject &s : m_objectArray)
   {
-    s.draw(true,"nglColourShader",m_mouseGlobalTX,m_cam);
+    s.draw(true,"nglColourShader",m_mouseGlobalTX,&m_cam);
   }
 
   // get color information from frame buffer
-  unsigned char pixel[3];
+  std::array<unsigned char,3> pixel;
   // get the viweport
-  GLint viewport[4];
-  glGetIntegerv(GL_VIEWPORT, viewport);
+  std::array<GLint,4> viewport;
+  glGetIntegerv(GL_VIEWPORT, &viewport[0]);
   // read the pixels (1,1 at present but could do wider area)
-  glReadPixels(_x*devicePixelRatio(), viewport[3] - _y*devicePixelRatio(), 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
+  glReadPixels(_x*devicePixelRatio(), viewport[3] - _y*devicePixelRatio(), 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &pixel[0]);
   // now loop for each object and see if the colour matches
   // need to use a reference object as we will change the class Active value
   int num=0;
-  BOOST_FOREACH(SelectObject &s, m_objectArray)
+  for(SelectObject &s : m_objectArray)
   {
-    if(s.checkSelectionColour(pixel) ==true)
+    if(s.checkSelectionColour(&pixel[0]) ==true)
       break;
     ++num;
   }
