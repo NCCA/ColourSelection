@@ -1,5 +1,5 @@
-#ifndef SELECT_OBJECT_H__
-#define SELECT_OBJECT_H__
+#ifndef SELECT_OBJECT_H_
+#define SELECT_OBJECT_H_
 
 #include <ngl/Camera.h>
 #include <ngl/Transformation.h>

@@ -62,9 +62,9 @@ void SelectObject::loadMatricesToShader( ngl::Transformation &_tx,const ngl::Mat
   MVP=MV*_cam->getProjectionMatrix() ;
   normalMatrix=MV;
   normalMatrix.inverse();
-  shader->setShaderParamFromMat4("MVP",MVP);
+  shader->setUniform("MVP",MVP);
   //std::cout<<"Shaded MVP \n"<<MVP<<"\n";
-  shader->setShaderParamFromMat3("normalMatrix",normalMatrix);
+  shader->setUniform("normalMatrix",normalMatrix);
 }
 
 void SelectObject::loadMatricesToColourShader(
@@ -81,7 +81,7 @@ void SelectObject::loadMatricesToColourShader(
 
   MV=_tx.getMatrix()*_globalTx*_cam->getViewMatrix() ;
   MVP=MV*_cam->getProjectionMatrix();
-  shader->setShaderParamFromMat4("MVP",MVP);
+  shader->setUniform("MVP",MVP);
   //std::cout<<"Colour MVP \n"<<MVP<<"\n";
 
 }
@@ -99,7 +99,7 @@ void SelectObject::draw(bool _selection,const std::string &_shaderName,const ngl
   t.setPosition(m_pos);
   if(_selection)
   {
-    shader->setShaderParam4f("Colour",m_colourID[0]/255.0f, m_colourID[1]/255.0f,m_colourID[2]/255.0f,1);
+    shader->setUniform("Colour",(float)m_colourID[0]/255.0f,(float) m_colourID[1]/255.0f,(float)m_colourID[2]/255.0f,1.0f);
 
     loadMatricesToColourShader(t,_globalTx,_shaderName,_cam);
   }

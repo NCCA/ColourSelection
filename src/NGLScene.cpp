@@ -67,12 +67,12 @@ void NGLScene::initializeGL()
   m_cam.setShape(45.0f,720.0f/576.0f,0.5f,150.0f);
   ngl::ShaderLib *shader=ngl::ShaderLib::instance();
   (*shader)["nglDiffuseShader"]->use();
-  shader->setShaderParam4f("Colour",1.0f,1.0f,1.0f,1.0f);
+  shader->setUniform("Colour",1.0f,1.0f,1.0f,1.0f);
 
   (*shader)["nglDiffuseShader"]->use();
-  shader->setShaderParam4f("Colour",1.0f,1.0f,0.0f,1.0f);
-  shader->setShaderParam3f("lightPos",1.0f,1.0f,1.0f);
-  shader->setShaderParam4f("lightDiffuse",1.0f,1.0f,1.0f,1.0f);
+  shader->setUniform("Colour",1.0f,1.0f,0.0f,1.0f);
+  shader->setUniform("lightPos",1.0f,1.0f,1.0f);
+  shader->setUniform("lightDiffuse",1.0f,1.0f,1.0f,1.0f);
 
 
   // as re-size is not explicitly called we need to do this.
