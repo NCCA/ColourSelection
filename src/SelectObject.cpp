@@ -57,11 +57,11 @@ void SelectObject::loadMatricesToShader( ngl::Transformation &_tx,const ngl::Mat
   ngl::Mat4 MVP;
   ngl::Mat3 normalMatrix;
   ngl::Mat4 M;
-  M=_tx.getMatrix()*_globalTx;
-  MV=_tx.getMatrix()*_globalTx*_cam->getViewMatrix() ;
-  MVP=MV*_cam->getProjectionMatrix() ;
+  M=_globalTx*_tx.getMatrix();
+  MV=_cam->getViewMatrix() * M ;
+  MVP=_cam->getProjectionMatrix() * MV ;
   normalMatrix=MV;
-  normalMatrix.inverse();
+  normalMatrix.inverse().transpose();
   shader->setUniform("MVP",MVP);
   //std::cout<<"Shaded MVP \n"<<MVP<<"\n";
   shader->setUniform("normalMatrix",normalMatrix);
@@ -79,11 +79,9 @@ void SelectObject::loadMatricesToColourShader(
   ngl::Mat4 MV;
   ngl::Mat4 MVP;
 
-  MV=_tx.getMatrix()*_globalTx*_cam->getViewMatrix() ;
-  MVP=MV*_cam->getProjectionMatrix();
+  MV=_cam->getViewMatrix()  * _globalTx*_tx.getMatrix();
+  MVP=_cam->getProjectionMatrix()*MV;
   shader->setUniform("MVP",MVP);
-  //std::cout<<"Colour MVP \n"<<MVP<<"\n";
-
 }
 
 
