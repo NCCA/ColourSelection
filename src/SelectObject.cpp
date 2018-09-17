@@ -48,7 +48,7 @@ bool SelectObject::checkSelectionColour(const unsigned char col[3])
 }
 
 
-void SelectObject::loadMatricesToShader( ngl::Transformation &_tx,const ngl::Mat4 &_globalTx,const std::string &_name,ngl::Camera *_cam)
+void SelectObject::loadMatricesToShader(ngl::Transformation &_tx, const ngl::Mat4 &_globalTx, const std::string &_name, const ngl::Mat4 &_view, const ngl::Mat4 &_project)
 {
   ngl::ShaderLib *shader=ngl::ShaderLib::instance();
   (*shader)[_name]->use();
@@ -58,12 +58,11 @@ void SelectObject::loadMatricesToShader( ngl::Transformation &_tx,const ngl::Mat
   ngl::Mat3 normalMatrix;
   ngl::Mat4 M;
   M=_globalTx*_tx.getMatrix();
-  MV=_cam->getViewMatrix() * M ;
-  MVP=_cam->getProjectionMatrix() * MV ;
+  MV=_view * M ;
+  MVP=_project * MV ;
   normalMatrix=MV;
   normalMatrix.inverse().transpose();
   shader->setUniform("MVP",MVP);
-  //std::cout<<"Shaded MVP \n"<<MVP<<"\n";
   shader->setUniform("normalMatrix",normalMatrix);
 }
 
@@ -71,7 +70,7 @@ void SelectObject::loadMatricesToColourShader(
                                               ngl::Transformation &_tx,
                                               const ngl::Mat4 &_globalTx,
                                               const std::string &_name,
-                                              ngl::Camera *_cam
+                                              const ngl::Mat4 &_view, const ngl::Mat4 &_project
                                               )
 {
   ngl::ShaderLib *shader=ngl::ShaderLib::instance();
@@ -79,14 +78,14 @@ void SelectObject::loadMatricesToColourShader(
   ngl::Mat4 MV;
   ngl::Mat4 MVP;
 
-  MV=_cam->getViewMatrix()  * _globalTx*_tx.getMatrix();
-  MVP=_cam->getProjectionMatrix()*MV;
+  MV=_view  * _globalTx*_tx.getMatrix();
+  MVP=_project*MV;
   shader->setUniform("MVP",MVP);
 }
 
 
 
-void SelectObject::draw(bool _selection,const std::string &_shaderName,const ngl::Mat4 &_globalTx,ngl::Camera *_cam)
+void SelectObject::draw(bool _selection,const std::string &_shaderName,const ngl::Mat4 &_globalTx,const ngl::Mat4 &_view, const ngl::Mat4 &_project )
 {
   // grab the VBO instance
   ngl::VAOPrimitives *prim=ngl::VAOPrimitives::instance();
@@ -99,11 +98,11 @@ void SelectObject::draw(bool _selection,const std::string &_shaderName,const ngl
   {
     shader->setUniform("Colour",(float)m_colourID[0]/255.0f,(float) m_colourID[1]/255.0f,(float)m_colourID[2]/255.0f,1.0f);
 
-    loadMatricesToColourShader(t,_globalTx,_shaderName,_cam);
+    loadMatricesToColourShader(t,_globalTx,_shaderName,_view,_project);
   }
   else
   {
-    loadMatricesToShader(t,_globalTx,_shaderName,_cam);
+    loadMatricesToShader(t,_globalTx,_shaderName,_view,_project);
   }
   if(m_active == true)
   {

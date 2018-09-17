@@ -1,12 +1,9 @@
 #ifndef NGLSCENE_H_
 #define NGLSCENE_H_
-#include <ngl/Camera.h>
-#include <ngl/Colour.h>
-#include <ngl/Light.h>
+#include <QOpenGLWindow>
 #include <ngl/Text.h>
 #include "SelectObject.h"
 #include "WindowParams.h"
-#include <QOpenGLWindow>
 #include <memory>
 //----------------------------------------------------------------------------------------------------------------------
 /// @file NGLScene.h
@@ -32,7 +29,7 @@ class NGLScene : public QOpenGLWindow
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief dtor must close down ngl and release OpenGL resources
     //----------------------------------------------------------------------------------------------------------------------
-    ~NGLScene();
+    ~NGLScene() override;
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief the initialize class is called once when the window is created and we have a valid GL context
     /// use this to setup any default GL stuff
@@ -55,7 +52,8 @@ private:
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief Our Camera
     //----------------------------------------------------------------------------------------------------------------------
-    ngl::Camera m_cam;
+    ngl::Mat4 m_view;
+    ngl::Mat4 m_project;
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief the model position for mouse movement
     //----------------------------------------------------------------------------------------------------------------------

@@ -1,7 +1,6 @@
 #ifndef SELECT_OBJECT_H_
 #define SELECT_OBJECT_H_
 
-#include <ngl/Camera.h>
 #include <ngl/Transformation.h>
 #include <ngl/Vec3.h>
 
@@ -25,7 +24,7 @@ class SelectObject
   /// @param[in] _shaderName the name of the shader to use when drawing
   /// @param[in] _transformStack the name of the transformation stack for drawing
   //----------------------------------------------------------------------------------------------------------------------
-  void draw(bool _selection,const std::string &_shaderName,const ngl::Mat4 &_globalTx,ngl::Camera *_cam);
+  void draw(bool _selection,const std::string &_shaderName,const ngl::Mat4 &_globalTx,const ngl::Mat4 &_view, const ngl::Mat4 &_project );
   //----------------------------------------------------------------------------------------------------------------------
   /// @brief check the current object againt the colour values passed in
   /// @param[in] _col[3] rgb values to check agains object colour
@@ -49,9 +48,8 @@ class SelectObject
     /// @brief indicates if the point is selected or not
     //----------------------------------------------------------------------------------------------------------------------
     bool m_active;
-    void loadMatricesToColourShader( ngl::Transformation &_tx,const ngl::Mat4 &_globalTx,const std::string &_name,ngl::Camera *_cam) ;
-
-    void loadMatricesToShader( ngl::Transformation &_tx,const ngl::Mat4 &_globalTx,const std::string &_name,ngl::Camera *_cam) ;
+    void loadMatricesToColourShader( ngl::Transformation &_tx,const ngl::Mat4 &_globalTx,const std::string &_name,const ngl::Mat4 &_view, const ngl::Mat4 &_project ) ;
+    void loadMatricesToShader( ngl::Transformation &_tx,const ngl::Mat4 &_globalTx,const std::string &_name,const ngl::Mat4 &_view, const ngl::Mat4 &_project ) ;
 
 };
 
