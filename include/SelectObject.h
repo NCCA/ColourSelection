@@ -13,6 +13,8 @@
 class SelectObject
 {
   public :
+  SelectObject()=default;
+
   //----------------------------------------------------------------------------------------------------------------------
   /// @brief ctor
   /// @param[in] _pos the position of the object

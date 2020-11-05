@@ -7,7 +7,7 @@
 #include <ngl/ShaderLib.h>
 #include <ngl/Random.h>
 #include <array>
-
+#include <algorithm>
 
 
 
@@ -16,13 +16,11 @@ NGLScene::NGLScene(int _numObjects)
   setTitle("Selection of Objects");
   m_numObjects=_numObjects;
   m_displayMode=true;
-  auto *rng=ngl::Random::instance();
-
-  for (int i=0; i<_numObjects; ++i)
-  {
-    m_objectArray.push_back(SelectObject(rng->getRandomPoint(10,10,10)));
-  }
-
+  m_objectArray.resize(m_numObjects);
+  std::generate(std::begin(m_objectArray),std::end(m_objectArray),[this](){
+     return SelectObject(ngl::Random::getRandomPoint()*10);
+   });
+  
 }
 
 
@@ -44,7 +42,7 @@ void NGLScene::initializeGL()
 {
   // we must call this first before any other GL commands to load and link the
   // gl commands from the lib, if this is not done program will crash
-  ngl::NGLInit::instance();
+  ngl::NGLInit::initialize();
 
   glClearColor(0.4f, 0.4f, 0.4f, 1.0f);			   // Grey Background
   glViewport(0,0,m_win.width,m_win.height);
@@ -62,14 +60,13 @@ void NGLScene::initializeGL()
   // set the shape using FOV 45 Aspect Ratio based on Width and Height
   // The final two are near and far clipping planes of 0.5 and 10
   m_project=ngl::perspective(45.0f,720.0f/576.0f,0.5f,150.0f);
-  ngl::ShaderLib *shader=ngl::ShaderLib::instance();
-  (*shader)[ngl::nglDiffuseShader]->use();
-  shader->setUniform("Colour",1.0f,1.0f,1.0f,1.0f);
+  ngl::ShaderLib::use(ngl::nglDiffuseShader);
+  ngl::ShaderLib::setUniform("Colour",1.0f,1.0f,1.0f,1.0f);
 
-  (*shader)[ngl::nglDiffuseShader]->use();
-  shader->setUniform("Colour",1.0f,1.0f,0.0f,1.0f);
-  shader->setUniform("lightPos",1.0f,1.0f,1.0f);
-  shader->setUniform("lightDiffuse",1.0f,1.0f,1.0f,1.0f);
+  ngl::ShaderLib::use(ngl::nglDiffuseShader);
+  ngl::ShaderLib::setUniform("Colour",1.0f,1.0f,0.0f,1.0f);
+  ngl::ShaderLib::setUniform("lightPos",1.0f,1.0f,1.0f);
+  ngl::ShaderLib::setUniform("lightDiffuse",1.0f,1.0f,1.0f,1.0f);
 
 
   // as re-size is not explicitly called we need to do this.
