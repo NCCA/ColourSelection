@@ -3,9 +3,9 @@
 #include <ngl/VAOPrimitives.h>
 #include <ngl/NGLStream.h>
 // set the initial colour to 0
-unsigned char SelectObject::s_gColourID[3] = {0, 0, 0};
+unsigned char SelectionObject::s_gColourID[3] = {0, 0, 0};
 
-SelectObject::SelectObject(ngl::Vec3 pos)
+SelectionObject::SelectionObject(ngl::Vec3 pos)
 {
   // set the initial values
   m_pos=pos;
@@ -34,7 +34,7 @@ SelectObject::SelectObject(ngl::Vec3 pos)
   }
 }
 
-bool SelectObject::checkSelectionColour(const unsigned char col[3])
+bool SelectionObject::checkSelectionColour(const unsigned char col[3])
 {
 
   // see if the colour passed in is the same as our objects one
@@ -47,7 +47,7 @@ bool SelectObject::checkSelectionColour(const unsigned char col[3])
 }
 
 
-void SelectObject::loadMatricesToShader(ngl::Transformation &_tx, const ngl::Mat4 &_globalTx, const std::string &_name, const ngl::Mat4 &_view, const ngl::Mat4 &_project)
+void SelectionObject::loadMatricesToShader(ngl::Transformation &_tx, const ngl::Mat4 &_globalTx, const std::string &_name, const ngl::Mat4 &_view, const ngl::Mat4 &_project)
 {
   ngl::ShaderLib::use(_name);
 
@@ -64,7 +64,7 @@ void SelectObject::loadMatricesToShader(ngl::Transformation &_tx, const ngl::Mat
   ngl::ShaderLib::setUniform("normalMatrix",normalMatrix);
 }
 
-void SelectObject::loadMatricesToColourShader(
+void SelectionObject::loadMatricesToColourShader(
                                               ngl::Transformation &_tx,
                                               const ngl::Mat4 &_globalTx,
                                               const std::string &_name,
@@ -82,7 +82,7 @@ void SelectObject::loadMatricesToColourShader(
 
 
 
-void SelectObject::draw(bool _selection,const std::string &_shaderName,const ngl::Mat4 &_globalTx,const ngl::Mat4 &_view, const ngl::Mat4 &_project )
+void SelectionObject::draw(bool _selection,const std::string &_shaderName,const ngl::Mat4 &_globalTx,const ngl::Mat4 &_view, const ngl::Mat4 &_project )
 {
   // grab the VBO instance
   ngl::ShaderLib::use(_shaderName);

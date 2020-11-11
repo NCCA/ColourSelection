@@ -18,7 +18,7 @@ NGLScene::NGLScene(int _numObjects)
   m_displayMode=true;
   m_objectArray.resize(m_numObjects);
   std::generate(std::begin(m_objectArray),std::end(m_objectArray),[this](){
-     return SelectObject(ngl::Random::getRandomPoint()*10);
+     return SelectionObject(ngl::Random::getRandomPoint()*10);
    });
   
 }
@@ -97,7 +97,7 @@ void NGLScene::paintGL()
   if (m_displayMode==true)
   {
 
-    for(SelectObject s : m_objectArray)
+    for(SelectionObject s : m_objectArray)
     {
       s.draw(false,"nglDiffuseShader",m_mouseGlobalTX,m_view,m_project);
     }
@@ -105,7 +105,7 @@ void NGLScene::paintGL()
   else
   {
 
-    for(SelectObject s : m_objectArray)
+    for(SelectionObject s : m_objectArray)
     {
       s.draw(true,"nglColourShader",m_mouseGlobalTX,m_view,m_project);
     }
@@ -240,7 +240,7 @@ void NGLScene::doSelection(const int _x, const int _y)
    m_mouseGlobalTX.m_m[3][1] = m_modelPos.m_y;
    m_mouseGlobalTX.m_m[3][2] = m_modelPos.m_z;
 
-  for(SelectObject &s : m_objectArray)
+  for(SelectionObject &s : m_objectArray)
   {
     s.draw(true,"nglColourShader",m_mouseGlobalTX,m_view,m_project);
   }
@@ -255,7 +255,7 @@ void NGLScene::doSelection(const int _x, const int _y)
   // now loop for each object and see if the colour matches
   // need to use a reference object as we will change the class Active value
   int num=0;
-  for(SelectObject &s : m_objectArray)
+  for(SelectionObject &s : m_objectArray)
   {
     if(s.checkSelectionColour(&pixel[0]) ==true)
       break;

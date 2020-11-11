@@ -1,5 +1,5 @@
-#ifndef SELECT_OBJECT_H_
-#define SELECT_OBJECT_H_
+#ifndef SelectionObject_H_
+#define SelectionObject_H_
 
 #include <ngl/Transformation.h>
 #include <ngl/Vec3.h>
@@ -10,16 +10,18 @@
 /// http://gpwiki.org/index.php/OpenGL_Selection_Using_Unique_Color_IDs
 /// beware their version is not the best but serves as a good basis
 //----------------------------------------------------------------------------------------------------------------------
-class SelectObject
+// originall this class was called SelectObjet however this is a function in windows and caused issues so renamed to SelectionObject
+class SelectionObject
 {
   public :
-  SelectObject()=default;
+  SelectionObject()=default;
+  SelectionObject(const SelectionObject &)=default;
 
   //----------------------------------------------------------------------------------------------------------------------
   /// @brief ctor
   /// @param[in] _pos the position of the object
   //----------------------------------------------------------------------------------------------------------------------
-  SelectObject(ngl::Vec3 _pos);
+  SelectionObject(ngl::Vec3 _pos);
   //----------------------------------------------------------------------------------------------------------------------
   /// @brief draw method
   /// @param[in] _selection flag to draw with colour for selection shader
@@ -31,7 +33,6 @@ class SelectObject
   /// @brief check the current object againt the colour values passed in
   /// @param[in] _col[3] rgb values to check agains object colour
   //----------------------------------------------------------------------------------------------------------------------
-
   bool checkSelectionColour(const unsigned char col[3]);
  private:
     //----------------------------------------------------------------------------------------------------------------------

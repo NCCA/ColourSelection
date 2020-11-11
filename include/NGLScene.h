@@ -1,10 +1,13 @@
 #ifndef NGLSCENE_H_
 #define NGLSCENE_H_
 #include <ngl/Text.h>
-#include "SelectObject.h"
 #include "WindowParams.h"
 #include <memory>
+#include <vector>
 #include <QOpenGLWindow>
+#include <ngl/Vec3.h>
+#include <ngl/Mat4.h>
+#include "SelectObject.h"
 //----------------------------------------------------------------------------------------------------------------------
 /// @file NGLScene.h
 /// @brief this class inherits from the Qt OpenGLWindow and allows us to use NGL to draw OpenGL
@@ -17,7 +20,6 @@
 /// @brief our main glwindow widget for NGL applications all drawing elements are
 /// put in this file
 //----------------------------------------------------------------------------------------------------------------------
-
 class NGLScene : public QOpenGLWindow
 {
   public:
@@ -69,7 +71,8 @@ private:
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief a dynamic array to contain our spheres
     //----------------------------------------------------------------------------------------------------------------------
-    std::vector <SelectObject> m_objectArray;
+    std::vector<SelectionObject> m_objectArray;
+    
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief the number of spheres we are creating
     //----------------------------------------------------------------------------------------------------------------------
@@ -80,10 +83,6 @@ private:
    /// @param[in] _y the y mouse position
    //----------------------------------------------------------------------------------------------------------------------
    void doSelection(const int _x,const int _y);
-    //----------------------------------------------------------------------------------------------------------------------
-    /// @brief method to load transform matrices to the shader
-    //----------------------------------------------------------------------------------------------------------------------
-    void loadMatricesToShader();
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief Qt Event called when a key is pressed
     /// @param [in] _event the Qt event to query for size etc
