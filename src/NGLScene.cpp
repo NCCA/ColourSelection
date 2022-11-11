@@ -8,6 +8,7 @@
 #include <ngl/Random.h>
 #include <array>
 #include <algorithm>
+#include <iostream>
 
 NGLScene::NGLScene(int _numObjects)
 {
